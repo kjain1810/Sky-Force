@@ -399,7 +399,7 @@ DRACOLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), 
 
 /* WEB WORKER */
 
-THREE.DRACOLoader.DRACOWorker = function () {
+DRACOLoader.DRACOWorker = function () {
 
 	var decoderConfig;
 	var decoderPending;
@@ -598,33 +598,33 @@ THREE.DRACOLoader.DRACOWorker = function () {
 
 };
 
-THREE.DRACOLoader.taskCache = new WeakMap();
+DRACOLoader.taskCache = new WeakMap();
 
 /** Deprecated static methods */
 
 /** @deprecated */
-THREE.DRACOLoader.setDecoderPath = function () {
+DRACOLoader.setDecoderPath = function () {
 
 	console.warn( 'THREE.DRACOLoader: The .setDecoderPath() method has been removed. Use instance methods.' );
 
 };
 
 /** @deprecated */
-THREE.DRACOLoader.setDecoderConfig = function () {
+DRACOLoader.setDecoderConfig = function () {
 
 	console.warn( 'THREE.DRACOLoader: The .setDecoderConfig() method has been removed. Use instance methods.' );
 
 };
 
 /** @deprecated */
-THREE.DRACOLoader.releaseDecoderModule = function () {
+DRACOLoader.releaseDecoderModule = function () {
 
 	console.warn( 'THREE.DRACOLoader: The .releaseDecoderModule() method has been removed. Use instance methods.' );
 
 };
 
 /** @deprecated */
-THREE.DRACOLoader.getDecoderModule = function () {
+DRACOLoader.getDecoderModule = function () {
 
 	console.warn( 'THREE.DRACOLoader: The .getDecoderModule() method has been removed. Use instance methods.' );
 
