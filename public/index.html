@@ -4,10 +4,28 @@
 		<style>
 			body { margin: 0; }
 			canvas { width: 640px; height: 360px }
+			#info {
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: left;
+				z-index: 100;
+				display:block;
+			}
+
 		</style>
 	</head>
 	<body>
+		<div id="info">
+			&nbsp Health
+			<div id="health"></div>
+			&nbsp Score
+			<div id="score"></div>
+			<br>
+		</div>
 		<script src="js/three.js"></script>
+		<script src="js/fireloader.js"></script>
+		<script src="js/fire.js"></script>
 		<script src="js/GLTFLoader.js"></script>
 		<script src="js/DRACOLoader.js"></script>
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script> -->

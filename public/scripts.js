@@ -10,13 +10,7 @@ document.body.appendChild(renderer.domElement);
 var ambientLight = new THREE.AmbientLight(0xcccccc);
 scene.add(ambientLight);
 
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-cube.scale.set(100000, 100000, 5);
-cube.position.set(0, 0, -100);
-// scene.add(cube);
-
+var fireTexture = new THREE.TextureLoader().load("./texture/Fire.png");
 
 camera.position.z = 5;
 camera.position.y = 0;
@@ -33,8 +27,10 @@ loader.load(
     gltf.scene.traverse(function (child) {
       if (child.material) child.material.metalness = 0.1;
     });
-    gltf.scene.position.set(0, 0, 0);
-    gltf.scene.scale.set(0.1, 0.1, 0.1);
+    console.log(gltf.scene);
+    gltf.scene.rotation.set(Math.PI / 2, 0, 0);
+    gltf.scene.position.set(0, 4, 0);
+    gltf.scene.scale.set(0.02, 0.02, 0.02);
     enemy_plane = gltf.scene;
   },
   null,
@@ -61,7 +57,6 @@ loader.load(
     gltf.scene.traverse(function (child) {
       if (child.material) child.material.metalness = 0.1;
     });
-    console.log(gltf.scene);
     gltf.scene.position.set(0, -3, 0);
     gltf.scene.rotation.set(Math.PI / 2, -Math.PI / 2, 0);
     gltf.scene.scale.set(0.04, 0.04, 0.04);
@@ -79,7 +74,6 @@ loader.load(
     gltf.scene.traverse(function (child) {
       if (child.material) child.material.metalness = 0.1;
     });
-    console.log(gltf.scene);
     gltf.scene.position.set(0, -3, 0);
     gltf.scene.rotation.set(Math.PI / 2, Math.PI, 0);
     gltf.scene.scale.set(0.05, 0.05, 0.04);
@@ -92,8 +86,19 @@ loader.load(
 )
 
 var missiles = [];
+var enemies = [];
+var fires = [];
+
+var health = 100;
+var score = 0;
+
+var clock = new Date();
+var lastTime = clock.getTime();
+
 
 var animate = async function () {
+  document.getElementById("health").innerHTML = "&nbsp&nbsp" + health;
+  document.getElementById("score").innerHTML = "&nbsp&nbsp" + score;
   requestAnimationFrame(animate);
   for(var i = 0; i < missiles.length; i++) {
     missiles[i].position.y += 0.1;
@@ -103,13 +108,38 @@ var animate = async function () {
       missiles = missiles.filter((m) => m != missiles[i]);
     }
   }
+  var clock = new Date();
+  var curTime = clock.getTime();
+  if(curTime - lastTime > 2000) {
+    var enemy = enemy_plane.clone();
+    var dx = 1;
+    if (curTime % 2) {
+      dx = -1;
+    }
+    enemy.position.x = -3 * dx;
+    enemies.push({
+      "enemy": enemy,
+      "x": 0,
+      "diffx": dx * 0.0001
+    });
+    lastTime = curTime;
+    scene.add(enemy);
+  }
+  for(var i = 0; i < enemies.length; i++) {
+    enemies[i]["enemy"].position.y -= 0.02;
+    enemies[i]["enemy"].children[1].rotation.y += 0.5;
+    enemies[i]["enemy"].position.x += Math.sin(enemies[i]["x"]);
+    enemies[i]["enemy"].rotation.y += 20*enemies[i]["diffx"];
+    enemies[i]["x"] += enemies[i]["diffx"]
+  }
+  checkCollisions();
   renderer.render(scene, camera);
 };
 
 animate();
 
-var ySpeed = 0.05;
-var xSpeed = 0.05;
+var ySpeed = 0.08;
+var xSpeed = 0.08;
 document.addEventListener("keydown", onDocumentKeyUp, false);
 function onDocumentKeyUp(event) {
   var keyCode = event.which;
@@ -126,5 +156,14 @@ function onDocumentKeyUp(event) {
     missilecopy.position.set(player_plane.position.x, player_plane.position.y, player_plane.position.z);
     scene.add(missilecopy);
     missiles.push(missilecopy);
+  }
+}
+
+function checkCollisions() {
+  for(var i = 0; i < missiles.length; i++)
+  {
+    for(var j = 0; j < enemies.length; j++)
+    {
+    }
   }
 }
