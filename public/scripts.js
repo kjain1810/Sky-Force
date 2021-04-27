@@ -49,7 +49,7 @@ loader.load("mesh/star.glb", function (gltf) {
 
     });
     gltf.scene.position.set(0, 0, 0);
-    gltf.scene.scale.set(0.3, 0.3, 0.3);
+    gltf.scene.scale.set(0.1, 0.1, 0.1);
     star = gltf.scene;
 }, null, function (error) {
     console.log("Error: " + error);
@@ -88,6 +88,7 @@ loader.load("mesh/missile.glb", function (gltf) {
 
 var missiles = [];
 var enemies = [];
+var stars = [];
 
 var health = 100;
 var score = 0;
@@ -199,9 +200,26 @@ function checkCollisions() {
         if (torem) {
             scene.remove(enemies[i]["enemy"]);
             score += 10;
+            var starcopy = star.clone();
+            starcopy.position.set(enemies[i]["enemy"].position.x, enemies[i]["enemy"].position.y, enemies[i]["enemy"].position.z);
+            scene.add(starcopy);
+            stars.push(starcopy);
         } else {
             new_enemies.push(enemies[i]);
         }
     }
     enemies = new_enemies;
+
+    var new_stars = [];
+    for (var i = 0; i < stars.length; i++) {
+        var distance = (stars[i].position.x - player_plane.position.x) * (stars[i].position.x - player_plane.position.x);
+        distance += (stars[i].position.y - player_plane.position.y) * (stars[i].position.y - player_plane.position.y);
+        if (distance < 0.6) {
+            score += 100;
+            scene.remove(stars[i]);
+        } else {
+            new_stars.push(stars[i]);
+        }
+    }
+    stars = new_stars;
 }
