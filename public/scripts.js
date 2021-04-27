@@ -96,6 +96,7 @@ var score = 0;
 var clock = new Date();
 var lastTime = clock.getTime();
 
+var star_speed = 0.025;
 
 var animate = async function () {
     document.getElementById("health").innerHTML = "&nbsp&nbsp" + health;
@@ -133,8 +134,15 @@ var animate = async function () {
         enemies[i]["enemy"].rotation.y += 20 * enemies[i]["diffx"];
         enemies[i]["x"] += enemies[i]["diffx"]
     }
+    for (var i = 0; i < stars.length; i++) {
+        stars[i].position.y -= star_speed;
+    }
     checkCollisions();
-    renderer.render(scene, camera);
+    if (health > 0) {
+        renderer.render(scene, camera);
+    } else {
+      document.getElementById("lol").innerHTML="<h1><center>GAME OVER!!!</center></h1>";
+    }
 };
 
 animate();
@@ -222,4 +230,17 @@ function checkCollisions() {
         }
     }
     stars = new_stars;
+
+    var remaining_enemies = []
+    for (var i = 0; i < enemies.length; i++) {
+        var distance = (player_plane.position.x - enemies[i]["enemy"].position.x) * (player_plane.position.x - enemies[i]["enemy"].position.x);
+        distance += (player_plane.position.y - enemies[i]["enemy"].position.y) * (player_plane.position.y - enemies[i]["enemy"].position.y);
+        if (distance < 0.8) {
+            health -= 10;
+            scene.remove(enemies[i]["enemy"]);
+        } else {
+            remaining_enemies.push(enemies[i]);
+        }
+    }
+    enemies = remaining_enemies;
 }
